@@ -282,6 +282,7 @@ var SearchScreen = React.createClass({
   ) {
     return (
       <MovieCell
+        ref='movie'
         key={movie.id}
         onSelect={() => this.selectMovie(movie)}
         onHighlight={() => highlightRowFunc(sectionID, rowID)}
@@ -299,7 +300,6 @@ var SearchScreen = React.createClass({
       /> :
       <ListView
         ref="listview"
-        renderSeparator={this.renderSeparator}
         dataSource={this.state.dataSource}
         renderFooter={this.renderFooter}
         renderRow={this.renderRow}
@@ -312,12 +312,6 @@ var SearchScreen = React.createClass({
 
     return (
       <View style={styles.container}>
-        <SearchBar
-          onSearchChange={this.onSearchChange}
-          isLoading={this.state.isLoading}
-          onFocus={() =>
-            this.refs.listview && this.refs.listview.getScrollResponder().scrollTo(0, 0)}
-        />
         <View style={styles.separator} />
         {content}
       </View>
@@ -357,8 +351,7 @@ var styles = StyleSheet.create({
     color: '#888888',
   },
   separator: {
-    height: 1,
-    backgroundColor: '#eeeeee',
+    marginTop: 64,
   },
   scrollSpinner: {
     marginVertical: 20,

@@ -32,19 +32,38 @@ var getImageSource = require('./getImageSource');
 var getTextFromScore = require('./getTextFromScore');
 
 var MovieCell = React.createClass({
+
+  onHighlight: function() {
+    this.setState({highlighted: true});
+  },
+
+  onUnhighlight: function() {
+    this.setState({highlighted: false});
+  },
+
+  getInitialState: function() {
+    return {
+      highlighted: false,
+    };
+  },
+
   render: function() {
     var criticsScore = this.props.movie.ratings.critics_score;
     var TouchableElement = TouchableHighlight;
     if (Platform.OS === 'android') {
       TouchableElement = TouchableNativeFeedback;
     }
+    var highlightedStyle = this.state.highlighted ? styles.highlighted : styles.unhighlighted;
+    var highlightedTouchableStyle = this.state.highlighted ? styles.highlightedTouchable : styles.unhighlightedTouchable;
     return (
       <View>
-        <TouchableElement
+        <TouchableElement 
+          style={highlightedTouchableStyle}
           onPress={this.props.onSelect}
-          onShowUnderlay={this.props.onHighlight}
-          onHideUnderlay={this.props.onUnhighlight}>
-          <View style={styles.row}>
+          onShowUnderlay={this.onHighlight}
+          onHideUnderlay={this.onUnhighlight}
+          >
+          <View style={[styles.row, highlightedStyle]}>
             {/* $FlowIssue #7363964 - There's a bug in Flow where you cannot
               * omit a property or set it to undefined if it's inside a shape,
               * even if it isn't required */}
@@ -87,9 +106,28 @@ var styles = StyleSheet.create({
   },
   row: {
     alignItems: 'center',
-    backgroundColor: 'white',
     flexDirection: 'row',
-    padding: 5,
+    padding: 10,
+    marginHorizontal: 10,
+    marginVertical: 5,
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  highlighted: {
+    backgroundColor: '#A8A8A8',
+  },
+  unhighlighted: {
+    backgroundColor: 'white',
+  },
+  highlightedTouchable: {
+    backgroundColor: '#F8F8F8',
+  },
+  unhighlightedTouchable: {
+    backgroundColor: 'white',
   },
   cellImage: {
     backgroundColor: '#dddddd',
